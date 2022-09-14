@@ -1,0 +1,105 @@
+https://docs.github.com/en/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection
+ssh autentication on github from Linux shell
+$ ls -al ~/.ssh           # checking
+$ ssh -T git@github.com
+
+Install Docker Engine on Ubuntu
+$ sudo apt install docker.io 
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04-ru
+ 
+Volumes  = like a fixed disc space for  
+#  After this, docker should start on system start.
+$ systemctl enable docker
+$ systemctl start docker
+sudo systemctl stop docker
+systemctl stop docker.socket
+
+ https://askubuntu.com/questions/1409192/cannot-install-docker-desktop-on-ubuntu-22-04
+ # https://www.youtube.com/watch?v=_j7hRa68QPg&ab_channel=UnixHost
+# download first image
+hub.docker.com/_/hello-world
+$ docker pull hello-world
+$ docker run hello-world
+
+#How to fix docker: Got permission DENied while trying conect
+# just open terminal and type this command
+$ sudo chmod 666 /var/run/docker.sock
+
+# check is docker running 
+$ sudo systemctl status docker
+
+#find any image on repo hub.docker
+$ docker search selery
+$ docker pull  selery
+
+#show all running apps -images
+$ docker images
+$ docker context ls  =$ docker ps   # see what is running 
+$ docker container prune  # delete all stoped containers
+
+# Використовуйте таку команду, щоб зупинити службу Docker Engine:
+$ sudo systemctl stop docker            docker.socket containerd
+
+#Залежно від вашої інсталяції Docker Engine може бути налаштований на автоматичний 
+запуск як системну службу під час запуску машини. Використовуйте таку команду, щоб вимкнути службу Docker Engine та запобігти її автоматичному запуску:
+$ sudo systemctl disable docker docker.socket containerd
+
+# запустити docker context useкоманду, щоб перемикатися між контекстами 
+# Docker Desktop та Docker Engine. Наприклад, використовуйте контекст «за замовчуванням» 
+# для взаємодії з Docker Engine;
+
+$ docker context use default
+systemctl --user start docker-desktop
+
+create image from dockerfile
+$ docker build -t try_celery_vit .
+
+ run cointainer new_name_container  based on  image ^ try_celery_vit
+$ docker run --name new_name_container try_celery_vit
+ same command to run but using port changing
+$ docker run --name new_name_container -p 8000:8000 -d try_celery_vit
+$  docker run -d -p 6379:6379 redis
+
+
+$ docker run --name postgres_vitalik -e POSTGRES_PASSWORD=pgpwd4habr -d postgres
+ запуск Бази postgres  
+$ sudo docker run --rm --name pg_name_container -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=postgres -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres
+
+всі порти, переглянути netstat -ntpl
+
+
+
+----------KEYS FOR DOCKER
+gpg: /home/vitalii/.gnupg/trustdb.gpg: створено trustdb
+gpg: ключ 6CBF0068738F4686 позначено як ключ з необмеженою довірою
+gpg: створено каталог «/home/vitalii/.gnupg/openpgp-revocs.d»
+gpg: сертифікат відкликання збережено як «/home/vitalii/.gnupg/openpgp-revocs.d/9BDC70D46BB875D194DF407A6CBF0068738F4686.rev»
+відкритий і закритий ключі створено і підписано.
+
+pub   rsa3072 2022-06-16 [SC] [діє до: 2024-06-15]
+      9BDC70D46BB875D194DF407A6CBF0068738F4686
+uid                      vitalikys87 <vitalikys87@gmail.com>
+sub   rsa3072 2022-06-16 [E] [діє до: 2024-06-15]
+
+
+https://django.fun/docs/celery/ru/5.1/getting-started/first-steps-with-celery/#application
+$ celery -A try_celery.tasks worker -l info     ERROR
+$ celery -A try_celery worker --loglevel=INFO  ОК
+$ celery -A try_celery beat -l info  запуск розкладу періодичності BEAT SCHEDULE
+
+https://flower.readthedocs.io/en/latest/install.html
+pip install flower, now we RUN:
+$ celery -A try_celery flower  --address=127.0.0.6 --port=5555
+шоб з консолі запускати app : python manage.py shell>>>
+$from tasks import add>>
+$my_task_retry.delay(55,66)         apply_async(()) та сама функція, відрізн аргументами
+$my_task_retry.apply_async((55,77), countdown=60) відкладено на 60с  delay() та сама функція, відрізн аргументами
+$add.apply_async((5,5), link=add.s(33))  # 10+33 result
+
+
+як добавити юзера щоб не вводити SUDO
+To create the docker group and add your user:
+1 Create the docker group. $ sudo groupadd docker.
+2 Add your user to the docker group. $ sudo usermod -aG docker $USER.
+3 Log out and log back in so that your group membership is re-evaluated. ...
+4 Verify that you can run docker commands without sudo .
