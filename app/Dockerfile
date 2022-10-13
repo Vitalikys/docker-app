@@ -10,7 +10,7 @@ ENV PYTHONUNBUFFERED 1
 
 # install psycopg2 dependencies
 RUN #apk update && apk add postgresql-dev gcc python3-dev musl-dev
-RUN apt-get -y install libpq-dev gcc && pip install psycopg2
+RUN apt-get -y install libpq-dev gcc && pip install psycopg2-binary
 
 # install dependencies
 RUN pip install --upgrade pip

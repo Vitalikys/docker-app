@@ -2,16 +2,18 @@ version: '3.8'
 
 services:
   web:
+    container_name: web_app
     build: ./app
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:6789
     volumes:
       - ./app/:/usr/src/app/
     ports:
-      - 8000:8000
+      - "8000:6789" # port 6789 -in container
     env_file:
       - ./.env.dev
   db:
     image: postgres:14.5
+    container_name: postgre_db
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
